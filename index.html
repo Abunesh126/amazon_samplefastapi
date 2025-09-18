@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Amazon Marketplace</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f3f3f3;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #232f3e;
+            color: white;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .product-card h3 {
+            margin: 0 0 10px 0;
+        }
+        .price {
+            color: #B12704;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .stock {
+            color: #007600;
+            font-size: 0.9rem;
+        }
+        button {
+            background-color: #FFD814;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #F7CA00;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Local Amazon Marketplace</h1>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="products" id="products-container">
+            <!-- Products will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Fetch products from backend
+        async function fetchProducts() {
+            try {
+                const response = await fetch('http://localhost:8000/products');
+                const products = await response.json();
+                displayProducts(products);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        // Display products in the container
+        function displayProducts(products) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <div class="price">$${product.price.toFixed(2)}</div>
+                    <div class="stock">In Stock: ${product.stock}</div>
+                    <div>Category: ${product.category}</div>
+                    <button onclick="alert('Feature coming soon!')">Add to Cart</button>
+                </div>
+            `).join('');
+        }
+
+        // Load products when page loads
+        window.onload = fetchProducts;
+    </script>
+</body>
+</html>
